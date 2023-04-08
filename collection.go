@@ -1,18 +1,18 @@
 package support
 
 // callback
-type callback func(any, any) any
+type callback[T any] func(T, T) T
 
 // Operator
 //
 // @Description: Operator interface
-type Operator[T map[any]any | []string] interface {
+type Operator[T any] interface {
 	// Map
 	//
 	// @Description: map data
 	// @param i
 	// @return Operator
-	Map(callback) Operator[T]
+	Map(callback[T]) Operator[T]
 
 	// To
 	//
@@ -24,7 +24,7 @@ type Operator[T map[any]any | []string] interface {
 
 // collection
 // @Description:
-type collection[T map[any]any | []string] struct {
+type collection[T any] struct {
 	data T
 }
 
@@ -36,7 +36,7 @@ var _ Operator[[]string] = (*collection[[]string])(nil)
 // @Description:
 // @param i data
 // @return Operator[T]
-func NewCollection[T map[any]any | []string](i T) Operator[T] {
+func NewCollection[T any](i T) Operator[T] {
 	return &collection[T]{data: i}
 }
 
@@ -46,8 +46,8 @@ func NewCollection[T map[any]any | []string](i T) Operator[T] {
 // @receiver c
 // @param i
 // @return Operator
-func (c *collection[T]) Map(fn callback) Operator[T] {
-	return &collection[T]{data: c.data}
+func (c *collection[T]) Map(fn callback[T]) Operator[T] {
+	return NewCollection(c.data)
 }
 
 // To
