@@ -1,7 +1,6 @@
 package support
 
-// callback
-type callback[T any] func(T, T) T
+type Mapper[K int | string, V any] map[K]V
 
 // Operator
 //
@@ -12,32 +11,33 @@ type Operator[T any] interface {
 	// @Description: map data
 	// @param i
 	// @return Operator
-	Map(callback[T]) Operator[T]
-
-	// To
-	//
-	// @Description: to data
-	// @param i
-	// @return Operator
-	To() T
+	Map(func(int, T) T) Splice[T]
 }
 
-// collection
-// @Description:
-type collection[T any] struct {
-	data T
-}
-
-// Operator[T map[any]any | []string] is implements Operator interface?
-var _ Operator[[]string] = (*collection[[]string])(nil)
-
-// NewCollection NewCollection[T map[any]any | []string]
+// Splice Splice[Tan]
 //
-// @Description:
+// @Description: splice type interface
+type Splice[T any] interface {
+	Operator[T]
+	To() []T
+}
+
+// s
+// @Description: splice type
+type s[T any] struct {
+	data []T
+}
+
+// Operator[[]string] is implements Operator interface ?
+var _ Splice[[]any] = (*s[[]any])(nil)
+
+// OfS OfS[T map[any]any | []string]
+//
+// @Description: of splice
 // @param i data
 // @return Operator[T]
-func NewCollection[T any](i T) Operator[T] {
-	return &collection[T]{data: i}
+func OfS[T any](i []T) Splice[T] {
+	return &s[T]{data: i}
 }
 
 // Map
@@ -46,9 +46,35 @@ func NewCollection[T any](i T) Operator[T] {
 // @receiver c
 // @param i
 // @return Operator
-func (c *collection[T]) Map(fn callback[T]) Operator[T] {
-	return NewCollection(c.data)
+func (c *s[T]) Map(fn func(int, T) T) Splice[T] {
+
+	ts := make([]T, 0, len(c.data))
+	for k, v := range c.data {
+		ts = append(ts, fn(k, v))
+	}
+
+	// Maps[int64, T](func(i int, a string) string {
+	// 	return a
+	// })(c.data)
+
+	return OfS(ts)
 }
+
+// func Maps[K any, T any](callback func(K, T) T) func([]T) []T {
+//
+// 	return func(xs []T) []T {
+//
+// 		result := make([]T, 0, len(xs))
+//
+// 		var k K
+// 		var v T
+// 		for k, v = range xs {
+// 			result = append(result, callback(k, v))
+// 		}
+//
+// 		return result
+// 	}
+// }
 
 // To
 //
@@ -56,6 +82,6 @@ func (c *collection[T]) Map(fn callback[T]) Operator[T] {
 // @receiver c
 // @param i
 // @return Operator
-func (c *collection[T]) To() T {
+func (c *s[T]) To() []T {
 	return c.data
 }
