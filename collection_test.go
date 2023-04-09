@@ -157,8 +157,6 @@ func Test_s_Reduce(t *testing.T) {
 					return 10
 				},
 				initialize: 0,
-
-				data: []int{1, 2, 3, 4},
 			},
 
 			want: 10,
@@ -169,7 +167,7 @@ func Test_s_Reduce(t *testing.T) {
 
 			c := NewS(tt.fields.data)
 
-			if got := c.Reduce(tt.args.callback, tt.args.initialize, tt.args.data); !reflect.DeepEqual(got, tt.want) {
+			if got := c.Reduce(tt.args.callback, tt.args.initialize); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Reduce() = %v, want %v", got, tt.want)
 			}
 		})
