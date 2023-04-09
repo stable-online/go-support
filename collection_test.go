@@ -172,7 +172,7 @@ func Test_s_Reduce(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 
-			if got := NewS(tt.fields.data).Reduce(newReduceFilter(tt.args.callback, tt.args.initialize)); !reflect.DeepEqual(got, tt.want) {
+			if got := NewS(tt.fields.data).Reduce(NewReduceFilter(tt.args.callback, tt.args.initialize)); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Reduce() = %v, want %v", got, tt.want)
 			}
 		})
