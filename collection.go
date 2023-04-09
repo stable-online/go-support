@@ -1,5 +1,9 @@
 package support
 
+import (
+	"github.com/stable-online/support/internal"
+)
+
 // Splicer Splicer[Tan]
 //
 // @Description: splice type interface
@@ -45,14 +49,7 @@ func NewS[T any](i []T) Splicer[T] {
 // @param i
 // @return Operator
 func (c *s[K, T]) Map(fn func(int, T) T) Splicer[T] {
-
-	//  build slice
-	ts := make([]T, 0, len(c.data))
-	for k, v := range c.data {
-		ts = append(ts, fn(k, v))
-	}
-
-	return NewS(ts)
+	return NewS(internal.MapS[T](c.data, fn))
 }
 
 // To
