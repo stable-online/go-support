@@ -15,6 +15,13 @@ type Splicer[T any] interface {
 	// @return Operator
 	Map(func(int, T) T) Splicer[T]
 
+	// Filter
+	//
+	// @Description:
+	// @param func(int, T) T
+	// @return Splicer[T]
+	Filter(func(int, T) bool) Splicer[T]
+
 	// To Splicer
 	//
 	// @Description:
@@ -50,6 +57,16 @@ func NewS[T any](i []T) Splicer[T] {
 // @return Operator
 func (c *s[K, T]) Map(fn func(int, T) T) Splicer[T] {
 	return NewS(internal.MapS[T](c.data, fn))
+}
+
+// Filter Map
+//
+// @Description:
+// @receiver c
+// @param i
+// @return Operator
+func (c *s[K, T]) Filter(fn func(int, T) bool) Splicer[T] {
+	return NewS(internal.FilterS[T](c.data, fn))
 }
 
 // To
