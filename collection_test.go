@@ -132,39 +132,39 @@ func Test_s_Filter(t *testing.T) {
 
 func Test_s_Reduce(t *testing.T) {
 	type fields struct {
-		data []int
+		data []string
 	}
 	type args struct {
-		callback   func(carry any, item int) (res any)
-		initialize int
-		data       []int
+		callback   func(carry string, item string) string
+		initialize string
 	}
 	tests := []struct {
 		name   string
 		fields fields
 		args   args
-		want   int
+		want   string
 	}{
 		{
 			name: "test_2",
 
 			fields: fields{
-				data: []int{1, 2, 3, 4},
+				data: []string{"a", "b", "c", "d"},
 			},
 
 			args: args{
-				callback: func(carry any, item int) (res any) {
-					return 10
+				callback: func(carry string, item string) string {
+					return carry + item
 				},
-				initialize: 0,
+				initialize: "",
 			},
 
-			want: 10,
+			want: "abcd",
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := NewS(tt.fields.data).Reduce(tt.args.callback, tt.args.initialize); !reflect.DeepEqual(got, tt.want) {
+
+			if got := NewS(tt.fields.data).Reduce(ReduceSF(tt.args.callback, tt.args.initialize)); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Reduce() = %v, want %v", got, tt.want)
 			}
 		})

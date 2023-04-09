@@ -1,9 +1,5 @@
 package support
 
-import (
-	"github.com/stable-online/support/internal"
-)
-
 // Splicer Splicer[Tan]
 //
 // @Description: splice type interface
@@ -27,7 +23,7 @@ type Splicer[T any] interface {
 	// @Description:
 	// @param func(k int, v T) (r bool)
 	// @return Splicer[T]
-	Reduce(callback func(carry any, item T) (res any), initialize any) any
+	Reduce(fn func([]T) T) T
 
 	// To Splicer
 	//
@@ -63,7 +59,22 @@ func NewS[T any](i []T) Splicer[T] {
 // @param i
 // @return Operator
 func (c *s[T]) Map(fn func(int, T) T) Splicer[T] {
-	return &s[T]{data: internal.MapS[T](c.data, fn)}
+	return &s[T]{data: MapSF[T](c.data, fn)}
+}
+
+// MapSF MapSF[T any]
+//
+// @Description: map splice function
+// @param data
+// @param fn
+// @return []T
+func MapSF[T any](data []T, fn func(int, T) T) []T {
+	//  build slice
+	ts := make([]T, 0, len(data))
+	for k, v := range data {
+		ts = append(ts, fn(k, v))
+	}
+	return ts
 }
 
 // Filter Map
@@ -73,7 +84,24 @@ func (c *s[T]) Map(fn func(int, T) T) Splicer[T] {
 // @param i
 // @return Operator
 func (c *s[T]) Filter(fn func(k int, v T) (r bool)) Splicer[T] {
-	return &s[T]{data: internal.FilterS[T](c.data, fn)}
+	return &s[T]{data: FilterSF[T](c.data, fn)}
+}
+
+// FilterSF [T any]
+//
+// @Description:
+// @param data
+// @param fn
+// @return []T
+func FilterSF[T any](data []T, fn func(int, T) bool) []T {
+	//  build slice
+	ts := make([]T, 0, len(data))
+	for k, v := range data {
+		if fn(k, v) {
+			ts = append(ts, v)
+		}
+	}
+	return ts
 }
 
 // Reduce Map
@@ -82,8 +110,27 @@ func (c *s[T]) Filter(fn func(k int, v T) (r bool)) Splicer[T] {
 // @receiver c
 // @param i
 // @return Operator
-func (c *s[T]) Reduce(callback func(carry any, item T) (res any), initialize any) any {
-	return internal.ReduceS(callback, initialize)(c.data)
+func (c *s[T]) Reduce(fn func([]T) T) T {
+	return fn(c.data)
+}
+
+// ReduceSF ReduceSF[T any]
+//
+// @Description: reduce splice function
+// @param data
+// @param fn
+// @return []T
+func ReduceSF[T any, C any](callback func(carry C, item T) C, initialize C) func([]T) C {
+	//
+	return func(ts []T) C {
+		//
+		for _, v := range ts {
+			initialize = callback(initialize, v)
+		}
+		//
+		return initialize
+	}
+
 }
 
 // To
