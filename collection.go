@@ -114,13 +114,13 @@ func (c *s[T]) Reduce(fn func([]T) T) T {
 	return fn(c.data)
 }
 
-// ReduceSF ReduceSF[T any]
+// newReduceFiltor newReduceFiltor[T any]
 //
 // @Description: reduce splice function
 // @param data
 // @param fn
 // @return []T
-func ReduceSF[T any, C any](callback func(carry C, item T) C, initialize C) func([]T) C {
+func newReduceFilter[T any, C any](callback func(carry C, item T) C, initialize C) func([]T) C {
 	//
 	return func(ts []T) C {
 		//
