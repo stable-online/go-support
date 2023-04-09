@@ -27,7 +27,7 @@ type Splicer[T any] interface {
 	// @Description:
 	// @param func(k int, v T) (r bool)
 	// @return Splicer[T]
-	Reduce(callback func(carry any, item T) (res any), initialize any, data []T) any
+	Reduce(callback func(carry any, item T) (res any), initialize any) any
 
 	// To Splicer
 	//
@@ -82,8 +82,8 @@ func (c *s[T]) Filter(fn func(k int, v T) (r bool)) Splicer[T] {
 // @receiver c
 // @param i
 // @return Operator
-func (c *s[T]) Reduce(callback func(carry any, item T) (res any), initialize any, data []T) any {
-	return internal.ReduceS(callback, initialize)(data)
+func (c *s[T]) Reduce(callback func(carry any, item T) (res any), initialize any) any {
+	return internal.ReduceS(callback, initialize)(c.data)
 }
 
 // To
