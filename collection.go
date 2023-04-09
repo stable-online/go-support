@@ -83,7 +83,7 @@ func (c *s[T]) Filter(fn func(k int, v T) (r bool)) Splicer[T] {
 // @param i
 // @return Operator
 func (c *s[T]) Reduce(callback func(carry any, item T) (res any), initialize any) any {
-	return internal.ReduceS(callback, initialize, c.data)
+	return internal.ReduceS(callback, initialize)(c.data)
 }
 
 // To

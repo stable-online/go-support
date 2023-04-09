@@ -6,15 +6,16 @@ package internal
 // @param data
 // @param fn
 // @return []T
-func ReduceS[T any, C any](callback func(carry C, item T) C, initialize C, ts []T) C {
-
+func ReduceS[T any, C any](callback func(carry C, item T) C, initialize C) func([]T) C {
 	//
-	for _, v := range ts {
-		initialize = callback(initialize, v)
+	return func(ts []T) C {
+		//
+		for _, v := range ts {
+			initialize = callback(initialize, v)
+		}
+		//
+		return initialize
 	}
-
-	//
-	return initialize
 
 }
 
