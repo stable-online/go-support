@@ -22,6 +22,13 @@ type Splicer[T any] interface {
 	// @return Splicer[T]
 	Filter(func(int, T) bool) Splicer[T]
 
+	// Reduce
+	//
+	// @Description:
+	// @param func(k int, v T) (r bool)
+	// @return Splicer[T]
+	Reduce(callback func(carry any, item T) (res any), initialize any, data []T) any
+
 	// To Splicer
 	//
 	// @Description:
@@ -31,14 +38,14 @@ type Splicer[T any] interface {
 
 // s
 // @Description: splice type
-type s[K any, T any] struct {
+type s[T any] struct {
 	data []T
 }
 
 // Operator[[]string] is implements Operator interface ?
 //
 //	build slice
-var _ Splicer[[]any] = (*s[int, []any])(nil)
+var _ Splicer[[]any] = (*s[[]any])(nil)
 
 // NewS NewS[T map[any]any | []string]
 //
@@ -46,7 +53,7 @@ var _ Splicer[[]any] = (*s[int, []any])(nil)
 // @param i data
 // @return Operator[T]
 func NewS[T any](i []T) Splicer[T] {
-	return &s[int, T]{data: i}
+	return &s[T]{data: i}
 }
 
 // Map
@@ -55,8 +62,8 @@ func NewS[T any](i []T) Splicer[T] {
 // @receiver c
 // @param i
 // @return Operator
-func (c *s[K, T]) Map(fn func(int, T) T) Splicer[T] {
-	return NewS(internal.MapS[T](c.data, fn))
+func (c *s[T]) Map(fn func(int, T) T) Splicer[T] {
+	return &s[T]{data: internal.MapS[T](c.data, fn)}
 }
 
 // Filter Map
@@ -65,8 +72,18 @@ func (c *s[K, T]) Map(fn func(int, T) T) Splicer[T] {
 // @receiver c
 // @param i
 // @return Operator
-func (c *s[K, T]) Filter(fn func(int, T) bool) Splicer[T] {
-	return NewS(internal.FilterS[T](c.data, fn))
+func (c *s[T]) Filter(fn func(k int, v T) (r bool)) Splicer[T] {
+	return &s[T]{data: internal.FilterS[T](c.data, fn)}
+}
+
+// Reduce Map
+//
+// @Description:
+// @receiver c
+// @param i
+// @return Operator
+func (c *s[T]) Reduce(callback func(carry any, item T) (res any), initialize any, data []T) any {
+	return internal.ReduceS(callback, initialize)(data)
 }
 
 // To
@@ -75,6 +92,6 @@ func (c *s[K, T]) Filter(fn func(int, T) bool) Splicer[T] {
 // @receiver c
 // @param i
 // @return Operator
-func (c *s[K, T]) To() []T {
+func (c *s[T]) To() []T {
 	return c.data
 }
