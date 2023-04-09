@@ -44,6 +44,10 @@ func Test_collection_To(t *testing.T) {
 
 }
 
+// Test_s_Map
+//
+// @Description:
+// @param t
 func Test_s_Map(t *testing.T) {
 
 	type fields struct {
@@ -130,6 +134,10 @@ func Test_s_Filter(t *testing.T) {
 
 }
 
+// Test_s_Reduce
+//
+// @Description:
+// @param t
 func Test_s_Reduce(t *testing.T) {
 	type fields struct {
 		data []string
