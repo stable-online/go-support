@@ -6,7 +6,7 @@ package internal
 // @param data
 // @param fn
 // @return []T
-func MapS[T any](data []T, fn func(int, T) any) []T {
+func MapS[T any](data []T, fn func(int, T) T) []T {
 	//  build slice
 	ts := make([]T, 0, len(data))
 	for k, v := range data {
