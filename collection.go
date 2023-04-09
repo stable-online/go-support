@@ -13,7 +13,7 @@ type Splicer[T any] interface {
 	// @Description: map data
 	// @param i
 	// @return Operator
-	Map(func(int, T) T) Splicer[T]
+	Map(func(int, T) any) Splicer[T]
 
 	// To Splicer
 	//
@@ -48,7 +48,7 @@ func NewS[T any](i []T) Splicer[T] {
 // @receiver c
 // @param i
 // @return Operator
-func (c *s[K, T]) Map(fn func(int, T) T) Splicer[T] {
+func (c *s[K, T]) Map(fn func(int, T) any) Splicer[T] {
 	return NewS(internal.MapS[T](c.data, fn))
 }
 
