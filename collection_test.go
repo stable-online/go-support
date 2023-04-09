@@ -154,7 +154,7 @@ func Test_s_Reduce(t *testing.T) {
 
 			args: args{
 				callback: func(carry any, item int) (res any) {
-					return 9
+					return 10
 				},
 				initialize: 0,
 
