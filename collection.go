@@ -1,43 +1,41 @@
 package support
 
-type Mapper[K int | string, V any] map[K]V
-
-// Operator
+// Splicer Splicer[Tan]
 //
-// @Description: Operator interface
-type Operator[T any] interface {
+// @Description: splice type interface
+type Splicer[T any] interface {
 	// Map
 	//
 	// @Description: map data
 	// @param i
 	// @return Operator
-	Map(func(int, T) T) Splice[T]
-}
+	Map(func(int, T) T) Splicer[T]
 
-// Splice Splice[Tan]
-//
-// @Description: splice type interface
-type Splice[T any] interface {
-	Operator[T]
+	// To Splicer
+	//
+	// @Description:
+	// @return []T
 	To() []T
 }
 
 // s
 // @Description: splice type
-type s[T any] struct {
+type s[K any, T any] struct {
 	data []T
 }
 
 // Operator[[]string] is implements Operator interface ?
-var _ Splice[[]any] = (*s[[]any])(nil)
-
-// OfS OfS[T map[any]any | []string]
 //
-// @Description: of splice
+//	build slice
+var _ Splicer[[]any] = (*s[int, []any])(nil)
+
+// NewS NewS[T map[any]any | []string]
+//
+// @Description: new splice
 // @param i data
 // @return Operator[T]
-func OfS[T any](i []T) Splice[T] {
-	return &s[T]{data: i}
+func NewS[T any](i []T) Splicer[T] {
+	return &s[int, T]{data: i}
 }
 
 // Map
@@ -46,35 +44,16 @@ func OfS[T any](i []T) Splice[T] {
 // @receiver c
 // @param i
 // @return Operator
-func (c *s[T]) Map(fn func(int, T) T) Splice[T] {
+func (c *s[K, T]) Map(fn func(int, T) T) Splicer[T] {
 
+	//  build slice
 	ts := make([]T, 0, len(c.data))
 	for k, v := range c.data {
 		ts = append(ts, fn(k, v))
 	}
 
-	// Maps[int64, T](func(i int, a string) string {
-	// 	return a
-	// })(c.data)
-
-	return OfS(ts)
+	return NewS(ts)
 }
-
-// func Maps[K any, T any](callback func(K, T) T) func([]T) []T {
-//
-// 	return func(xs []T) []T {
-//
-// 		result := make([]T, 0, len(xs))
-//
-// 		var k K
-// 		var v T
-// 		for k, v = range xs {
-// 			result = append(result, callback(k, v))
-// 		}
-//
-// 		return result
-// 	}
-// }
 
 // To
 //
@@ -82,6 +61,6 @@ func (c *s[T]) Map(fn func(int, T) T) Splice[T] {
 // @receiver c
 // @param i
 // @return Operator
-func (c *s[T]) To() []T {
+func (c *s[K, T]) To() []T {
 	return c.data
 }

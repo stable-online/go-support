@@ -35,7 +35,7 @@ func Test_collection_To(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c := OfS(tt.fields.data)
+			c := NewS(tt.fields.data)
 			if got := c.To(); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("To() = %v, want %v", got, tt.want)
 			}
@@ -71,7 +71,7 @@ func Test_s_Map(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 
-			c := OfS(tt.fields.data).Map(func(k int, v string) string {
+			c := NewS(tt.fields.data).Map(func(k int, v string) string {
 				return v
 			})
 
