@@ -34,7 +34,7 @@ Support is a Programming helpers powered by Golang [1.18](https://tip.golang.org
 
 ## Install
 
-因为要用到泛型, 需要 go 版本为 1.18+ 
+因为要用到泛型, 需要 go 版本为 1.18+  
 
 Requires go 1.18+
 
