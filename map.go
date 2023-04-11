@@ -78,7 +78,7 @@ func (c m[K, T]) Map(fn MMapFunction[K, T]) Mapper[K, T] {
 // @param fn
 // @param initialize
 // @return func(b Mapper[T]) any
-func MMapF[K comparable, T any](fn func(K, T) T) MMapFunction[K, T] {
+func MMapF[K comparable, T any](fn func(key K, val T) (res T)) MMapFunction[K, T] {
 	return func(i map[K]T) map[K]T {
 		r := &MMapP[K, T]{fn: fn}
 		return r.mapPF()(i)
