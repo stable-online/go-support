@@ -84,7 +84,7 @@ return carry + item
 ```go
 support.NewS([]string{"a", "b", "c"})
 
-// => &{[a b c]}
+// => [a b c]
 ```
 
 #### Get
@@ -146,43 +146,44 @@ support.SReduceF(func(i string, t string) string { return i + t }, "")([]string{
 
 ### MapStream
 
-#### NewS
+#### NewM
 
 ```go
-support.NewS([]string{"a", "b", "c"})
+support.NewM(map[string]string{"a": "1", "b": "2", "c": "3"})
 
-// => &{[a b c]}
+// => map[a:1 b:2 c:3]
 ```
 
 #### Get
 
 ```go
-support.NewS([]string{"a", "b", "c"}).Get()
+support.NewM(map[string]string{"a": "1", "b": "2", "c": "3"}).Get()
 
-// => [a b c]
+// => map[a:1 b:2 c:3]
 ```
 
 #### Map
 
 ```go
-support.NewS([]string{"a", "b", "c"}).Map(support.SMapF(func(i int, t string) string { return t + "h" })).Get()
+support.NewM(map[string]string{"a": "1", "b": "2", "c": "3"}).Map(support.MMapF(func(key string, val string) (res string) { return val + "1" })).Get()
 
-// => [ah bh ch]
+// => map[a:11 b:21 c:31]
 ```
 
 #### Filter
 
 ```go
-support.NewS([]string{"a", "b", "c"}).Filter(support.SFilterF(func(k int, v string) bool {return v != "a" })).Get()
+support.NewM(map[string]string{"a": "1", "b": "2", "c": "3"}).Filter(support.MFilterF(func(k string, t string) bool { return t != "1" })).Get()
 
-// => &{[b c]}
+// => map[b:2 c:3]
 ```
 #### Reduce
 
 ```go
-support.NewS([]string{"a", "b", "c"}).Reduce(support.SReduceF(func(carry string, item string) string {return carry + item }, ""))
+support.NewM(map[string]string{"a": "1", "b": "2", "c": "3"}).Reduce(support.MReduceF(func(carry string, key string, item string) string { return carry + key + item }, ""))
 
-// => abc
+// tips : Because the output of maps is unordered, the output may be different each time.
+// => abc 
 ```
 
 ### MapFunction
@@ -190,23 +191,23 @@ support.NewS([]string{"a", "b", "c"}).Reduce(support.SReduceF(func(carry string,
 #### MMapF
 
 ```go
-support.SMapF(func(key int, item string) string { return item + "1" })([]string{"a", "b", "c"})
+support.MMapF(func(key string, val string) (res string) { return key + val })(map[string]string{"a": "1", "b": "2", "c": "3"})
 
-// => [a1 b1 c1]
+// => map[a:a1 b:b2 c:c3]
 ```
 
 #### MFilterF
 
 ```go
-support.SFilterF(func(i int, t string) bool { return t != "a" })([]string{"a", "b", "c"})
+support.MFilterF(func(key string, val string) bool { return val != "2" })(map[string]string{"a": "1", "b": "2", "c": "3"})
 
-// => [b c]
+// => map[a:1 c:3]
 ```
 
 #### MReduceF
 
 ```go
-support.SReduceF(func(i string, t string) string { return i + t }, "")([]string{"a", "b", "c"})
+support.MReduceF(func(carry string, key string, item string) string { return carry + key + item }, "")(map[string]string{"a": "1", "b": "2", "c": "3"})
 
-// => abc
+// => a1b2c3
 ```
