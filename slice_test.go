@@ -9,7 +9,7 @@ import (
 //
 // @Description: test to method
 // @param t
-func Test_collection_To(t *testing.T) {
+func Test_s_Get(t *testing.T) {
 
 	type fields struct {
 		data []any
@@ -75,7 +75,7 @@ func Test_s_Map(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 
-			c := NewS(tt.fields.data).Map(MapH(func(k int, v string) string {
+			c := NewS(tt.fields.data).Map(SMapF(func(k int, v string) string {
 				return v
 			}))
 
@@ -117,7 +117,7 @@ func Test_s_Filter(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 
-			c := NewS(tt.fields.data).Filter(FilterH(func(k int, v string) bool {
+			c := NewS(tt.fields.data).Filter(SFilterF(func(k int, v string) bool {
 				for _, i2 := range []string{"a", "c", "b2"} {
 					if v == i2 {
 						return true
@@ -171,7 +171,7 @@ func Test_s_Reduce(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := NewS(tt.fields.data).Reduce(ReduceH(tt.args.callback, tt.args.initialize)); !reflect.DeepEqual(got, tt.want) {
+			if got := NewS(tt.fields.data).Reduce(SReduceF(tt.args.callback, tt.args.initialize)); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Reduce() = %v, want %v", got, tt.want)
 			}
 		})
@@ -220,7 +220,7 @@ func Test_s_Reduce_when_initializeIsSlice(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := NewS(tt.fields.data).Reduce(ReduceH(tt.args.callback, tt.args.initialize)); !reflect.DeepEqual(got, tt.want) {
+			if got := NewS(tt.fields.data).Reduce(SReduceF(tt.args.callback, tt.args.initialize)); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Reduce() = %v, want %v", got, tt.want)
 			}
 		})
@@ -233,21 +233,21 @@ func Test_s_Reduce_when_initializeIsSlice(t *testing.T) {
 // @param t
 // func TestS_Filter(t *testing.T) {
 //
-// 	fmt.Println(NewS([]string{"a", "b", "c"}).Map(MapH(func(key int, item string) string {
+// 	fmt.Println(NewS([]string{"a", "b", "c"}).Map(SMapF(func(key int, item string) string {
 // 		return item + "hello1"
-// 	})).Filter(FilterH(func(i int, t string) bool {
+// 	})).Filter(SFilterF(func(i int, t string) bool {
 // 		return t != "ahello1"
-// 	})).Reduce(ReduceH(func(carry string, item string) string {
+// 	})).Reduce(SReduceF(func(carry string, item string) string {
 // 		return carry + "=" + item
 // 	}, "")))
 //
 // }
 
-// TestMapSF
+// TestMapH
 //
-// @Description: test map sf
+// @Description:  test SMapF
 // @param t
-func TestMapSF(t *testing.T) {
+func TestSMapF(t *testing.T) {
 	type args struct {
 		data []string
 		fn   func(int, string) string
@@ -271,14 +271,18 @@ func TestMapSF(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := MapSF(tt.args.fn)(tt.args.data); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("MapSF() = %v, want %v", got, tt.want)
+			if got := SMapF(tt.args.fn)(tt.args.data); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("mapSF() = %v, want %v", got, tt.want)
 			}
 		})
 	}
 }
 
-func TestFilterSF(t *testing.T) {
+// TestSFilterF
+//
+// @Description: test SFilterF sf
+// @param t
+func TestSFilterF(t *testing.T) {
 	type args struct {
 		data []string
 		fn   func(int, string) bool
@@ -302,8 +306,8 @@ func TestFilterSF(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := FilterSF(tt.args.fn)(tt.args.data); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("FilterSF() = %v, want %v", got, tt.want)
+			if got := SFilterF(tt.args.fn)(tt.args.data); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("filterSF() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -311,9 +315,9 @@ func TestFilterSF(t *testing.T) {
 
 // TestReduceSF
 //
-// @Description:
+// @Description: test SReduceF sf
 // @param t
-func TestReduceSF(t *testing.T) {
+func TestSReduceF(t *testing.T) {
 
 	type args struct {
 		data       []string
@@ -345,8 +349,8 @@ func TestReduceSF(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := ReduceSF(tt.args.fn, tt.args.initialize)(tt.args.data); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("ReduceSF() = %v, want %v", got, tt.want)
+			if got := SReduceF(tt.args.fn, tt.args.initialize)(tt.args.data); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("reduceSF() = %v, want %v", got, tt.want)
 			}
 		})
 	}
