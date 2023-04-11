@@ -6,8 +6,9 @@ Support is a Programming helpers powered by Golang [1.18](https://tip.golang.org
 
 - [Install](#install)
 - [Features](#features)
+  - [OverviewCases](#OverviewCases)
+    - [SliceCase](#SliceCase)
   - [SliceStream](#SliceStream)
-    - [OverviewCases](#reduce)
     - [NewS](#support.NewS)
     - [Get](#get)
     - [Map](#map)
@@ -28,9 +29,9 @@ go get github.com/stable-online/support
 
 ## Features
 
-### SliceStream
+### OverviewCases
 
-#### OverviewCases
+### SliceCase
 
 ```go
 support.NewS([]string{"a", "b", "c"}).Map(support.SMapF(func(key int, item string) string {
@@ -43,6 +44,8 @@ return carry + item
 
 // => b1c1
 ```
+
+### SliceStream
 
 #### NewS
 
