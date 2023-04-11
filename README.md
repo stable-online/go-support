@@ -1,6 +1,6 @@
 # Support
 
-Support 是通过Golang 1.18+版本以上,提供的强有力的功能助手.  
+Support 是通过Golang 1.18+版本以上,提供的强有力的功能助手.    
 
 Support is a Programming helpers powered by Golang [1.18](https://tip.golang.org/doc/go1.18)+ [generics](https://tip.golang.org/doc/go1.18#generics).
 
