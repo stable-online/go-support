@@ -1,5 +1,6 @@
 # Support
 
+Support 是通过Golang 1.18+版本以上,提供的强有力的功能助手. 
 Support is a Programming helpers powered by Golang [1.18](https://tip.golang.org/doc/go1.18)+ [generics](https://tip.golang.org/doc/go1.18#generics).
 
 ## Contents
@@ -33,6 +34,8 @@ Support is a Programming helpers powered by Golang [1.18](https://tip.golang.org
 
 ## Install
 
+因为要用到泛型, 需要 go 版本为 1.18+ 
+
 Requires go 1.18+
 
 ```sh
@@ -48,12 +51,15 @@ go get github.com/stable-online/support
 ```go
 support.NewS([]string{"a", "b", "c"}).Map(support.SMapF(func(key int, item string) string {
 // Concatenate the string "1" to the value of each item.
+// 切片内每一个元素后拼接一个 1 字符串
 return item + "1"
 })).Filter(support.SFilterF(func(i int, t string) bool {
 // Display to standard output the values of each item that is not equal to "a1".
+// 如果不等于1, 返回true(将元素返回)	
 return t != "a1"
 })).Reduce(support.SReduceF(func(carry string, item string) string {
 // Concatenate the value of each item.
+// 拼接切片内的每一个元素. 	
 return carry + item
 }, ""))
 
@@ -65,12 +71,15 @@ return carry + item
 ```go
 support.NewM(map[string]int{"a": 1, "b": 2, "c": 3}).Map(support.MMapF(func(key string, v int) int {
 // Add 1 to the value of each item.
+// 字典内的每一个元素 + 1	
 return v + 1
 })).Filter(support.MFilterF(func(k string, t int) bool {
 // Display to standard output the values of each item that is not equal to 2.
+// 如果不等于2, 返回true(将元素返回)	
 return t != 2
 })).Reduce(support.MReduceF(func(carry int, key string, item int) int {
 // Add the result to the value of each item.
+// 将字典内的每一个元素值相加.
 return carry + item
 }, 0))
 
