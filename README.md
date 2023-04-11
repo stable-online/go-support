@@ -43,11 +43,9 @@ Requires go 1.18+
 go get github.com/stable-online/support
 ```
 
-## Features
+## OverviewCases
 
-### OverviewCases
-
-### SliceCase
+## SliceCase
 
 ```go
 support.NewS([]string{"a", "b", "c"}).Map(support.SMapF(func(key int, item string) string {
@@ -67,7 +65,7 @@ return carry + item
 // => b1c1
 ```
 
-### MapCase
+## MapCase
 
 ```go
 support.NewM(map[string]int{"a": 1, "b": 2, "c": 3}).Map(support.MMapF(func(key string, v int) int {
@@ -86,6 +84,7 @@ return carry + item
 
 // => b1c1
 ```
+## Features
 
 ### SliceStream
 
