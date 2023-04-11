@@ -45,7 +45,7 @@ go get github.com/stable-online/support
 
 ## OverviewCases
 
-## SliceCase
+## Slice
 
 ```go
 support.NewS([]string{"a", "b", "c"}).Map(support.SMapF(func(key int, item string) string {
@@ -65,7 +65,7 @@ return carry + item
 // => b1c1
 ```
 
-## MapCase
+## Map
 
 ```go
 support.NewM(map[string]int{"a": 1, "b": 2, "c": 3}).Map(support.MMapF(func(key string, v int) int {
