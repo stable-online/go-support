@@ -7,10 +7,10 @@ Support is a Programming helpers powered by Golang [1.18](https://tip.golang.org
 ## Contents
 
 - [Install](#install)
+- [OverviewCases](#OverviewCases)
+  - [SliceCase](#SliceCase)
+  - [MapCase](#MapCase)
 - [Features](#features)
-  - [OverviewCases](#OverviewCases)
-    - [SliceCase](#SliceCase)
-    - [MapCase](#MapCase)
   - [SliceStream](#SliceStream)
     - [NewS](#NewS)
     - [Get](#get)
