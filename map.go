@@ -45,13 +45,13 @@ type Mapper[K comparable, T any] interface {
 	Get() map[K]T
 }
 
-// s Mapper type implement
-type m[K comparable, T any] map[K]T
+// _s Mapper type implement
+type _m[K comparable, T any] map[K]T
 
 // Mapper[[]string] is implements Mapper interface ?
 //
 //	build mapper
-var _ Mapper[string, string] = (m[string, string])(nil)
+var _ Mapper[string, string] = (_m[string, string])(nil)
 
 // NewM NewM[T map[any]any | []string]
 //
@@ -59,7 +59,7 @@ var _ Mapper[string, string] = (m[string, string])(nil)
 // @param i data
 // @return Operator[T]
 func NewM[K comparable, T any](i map[K]T) Mapper[K, T] {
-	return m[K, T](i)
+	return _m[K, T](i)
 }
 
 // Map
@@ -68,7 +68,7 @@ func NewM[K comparable, T any](i map[K]T) Mapper[K, T] {
 // @receiver c
 // @param i
 // @return Operator
-func (c m[K, T]) Map(fn MMapFunction[K, T]) Mapper[K, T] {
+func (c _m[K, T]) Map(fn MMapFunction[K, T]) Mapper[K, T] {
 	return NewM(fn(c))
 }
 
@@ -80,14 +80,14 @@ func (c m[K, T]) Map(fn MMapFunction[K, T]) Mapper[K, T] {
 // @return func(b Mapper[T]) any
 func MMapF[K comparable, T any](fn func(key K, val T) T) MMapFunction[K, T] {
 	return func(i map[K]T) map[K]T {
-		r := &MMapP[K, T]{fn: fn}
+		r := &mMapP[K, T]{fn: fn}
 		return r.mapPF()(i)
 	}
 }
 
-// MMapP MReduceP Reduce parameter build
+// mMapP mReduceP Reduce parameter build
 // @Description:
-type MMapP[K comparable, T any] struct {
+type mMapP[K comparable, T any] struct {
 	fn func(K, T) T
 }
 
@@ -97,7 +97,7 @@ type MMapP[K comparable, T any] struct {
 // @param callback
 // @param initialize
 // @return func([]T) C
-func (s *MMapP[K, T]) mapPF() func(map[K]T) map[K]T {
+func (s *mMapP[K, T]) mapPF() func(map[K]T) map[K]T {
 	return func(d map[K]T) map[K]T {
 		//  build map
 		ts := make(map[K]T, len(d))
@@ -114,7 +114,7 @@ func (s *MMapP[K, T]) mapPF() func(map[K]T) map[K]T {
 // @receiver c
 // @param i
 // @return Operator
-func (c m[K, T]) Filter(fn MFilterFunction[K, T]) Mapper[K, T] {
+func (c _m[K, T]) Filter(fn MFilterFunction[K, T]) Mapper[K, T] {
 	return NewM(fn(c))
 }
 
@@ -126,24 +126,24 @@ func (c m[K, T]) Filter(fn MFilterFunction[K, T]) Mapper[K, T] {
 // @return func(b Mapper[T]) any
 func MFilterF[K comparable, T any](fn func(K, T) bool) MFilterFunction[K, T] {
 	return func(b map[K]T) map[K]T {
-		r := &MFilterP[K, T]{fn: fn}
+		r := &mFilterP[K, T]{fn: fn}
 		return r.filterPF()(b)
 	}
 }
 
-// MFilterP MReduceP  parameter build
+// mFilterP mReduceP  parameter build
 // @Description:
-type MFilterP[K comparable, T any] struct {
+type mFilterP[K comparable, T any] struct {
 	fn func(K, T) bool
 }
 
 // filterPF [T any, C any]
 //
-// @Description: filterPF method of MFilterP
+// @Description: filterPF method of mFilterP
 // @param callback
 // @param initialize
 // @return func([]T) C
-func (s *MFilterP[K, T]) filterPF() func(d map[K]T) map[K]T {
+func (s *mFilterP[K, T]) filterPF() func(d map[K]T) map[K]T {
 	return func(d map[K]T) map[K]T {
 
 		//  build map
@@ -160,11 +160,11 @@ func (s *MFilterP[K, T]) filterPF() func(d map[K]T) map[K]T {
 
 // Reduce
 //
-// @Description: Reduce Of s
+// @Description: Reduce Of _s
 // @receiver c
 // @param i
 // @return Operator
-func (c m[K, T]) Reduce(fn MReduceFunction[K, T]) any {
+func (c _m[K, T]) Reduce(fn MReduceFunction[K, T]) any {
 	return fn(c)
 }
 
@@ -176,14 +176,14 @@ func (c m[K, T]) Reduce(fn MReduceFunction[K, T]) any {
 // @return func(b Mapper[T]) any
 func MReduceF[T any, K comparable, V any](fn func(carry V, key K, item T) V, initialize V) MReduceFunction[K, T] {
 	return func(b map[K]T) any {
-		r := MReduceP[K, T, V]{fn: fn, initialize: initialize}
+		r := mReduceP[K, T, V]{fn: fn, initialize: initialize}
 		return r.reducePF()(b)
 	}
 }
 
-// MReduceP  parameter build
+// mReduceP  parameter build
 // @Description:
-type MReduceP[K comparable, T any, C any] struct {
+type mReduceP[K comparable, T any, C any] struct {
 	fn         func(carry C, key K, item T) C
 	initialize C
 }
@@ -194,7 +194,7 @@ type MReduceP[K comparable, T any, C any] struct {
 // @param callback
 // @param initialize
 // @return func([]T) C
-func (s *MReduceP[K, T, C]) reducePF() func(map[K]T) C {
+func (s *mReduceP[K, T, C]) reducePF() func(map[K]T) C {
 	return func(ts map[K]T) C {
 		for k, v := range ts {
 			s.initialize = s.fn(s.initialize, k, v)
@@ -209,6 +209,6 @@ func (s *MReduceP[K, T, C]) reducePF() func(map[K]T) C {
 // @receiver c
 // @param i
 // @return Operator
-func (c m[K, T]) Get() map[K]T {
+func (c _m[K, T]) Get() map[K]T {
 	return c
 }

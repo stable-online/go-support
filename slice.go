@@ -45,13 +45,13 @@ type Slicer[T any] interface {
 	Get() []T
 }
 
-// s Slicer type implement
-type s[T any] []T
+// _s Slicer type implement
+type _s[T any] []T
 
 // Slicer[[]string] is implements Slicer interface ?
 //
 //	build slice
-var _ Slicer[string] = (s[string])(nil)
+var _ Slicer[string] = (_s[string])(nil)
 
 // NewS NewS[T map[any]any | []string]
 //
@@ -59,7 +59,7 @@ var _ Slicer[string] = (s[string])(nil)
 // @param i data
 // @return Operator[T]
 func NewS[T any](i []T) Slicer[T] {
-	return s[T](i)
+	return _s[T](i)
 }
 
 // Map
@@ -68,7 +68,7 @@ func NewS[T any](i []T) Slicer[T] {
 // @receiver c
 // @param i
 // @return Operator
-func (c s[T]) Map(fn SMapFunction[T]) Slicer[T] {
+func (c _s[T]) Map(fn SMapFunction[T]) Slicer[T] {
 	return NewS(fn(c))
 }
 
@@ -114,7 +114,7 @@ func (s *SmapP[T]) mapPF() func([]T) []T {
 // @receiver c
 // @param i
 // @return Operator
-func (c s[T]) Filter(fn SFilterFunction[T]) Slicer[T] {
+func (c _s[T]) Filter(fn SFilterFunction[T]) Slicer[T] {
 	return NewS(fn(c))
 }
 
@@ -158,11 +158,11 @@ func (s *SFilterP[T]) filterPF() func([]T) []T {
 
 // Reduce
 //
-// @Description: Reduce Of s
+// @Description: Reduce Of _s
 // @receiver c
 // @param i
 // @return Operator
-func (c s[T]) Reduce(fn SReduceFunction[T]) any {
+func (c _s[T]) Reduce(fn SReduceFunction[T]) any {
 	return fn(c)
 }
 
@@ -207,6 +207,6 @@ func (s *SReduceP[T, C]) reducePF() func([]T) C {
 // @receiver c
 // @param i
 // @return Operator
-func (c s[T]) Get() []T {
+func (c _s[T]) Get() []T {
 	return c
 }
