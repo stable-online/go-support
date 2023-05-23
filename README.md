@@ -49,7 +49,7 @@ go get github.com/stable-online/support
 
 ```go
 support.NewS([]string{"a", "b", "c"}).Map(support.SMapF(func(key int, item string) string {
-// Concatenate the string "1" to the value of each item.
+// Concatenate the string '1' to the value of each item.
 // 切片内每一个元素后拼接一个 1 字符串
 return item + "1"
 })).Filter(support.SFilterF(func(i int, t string) bool {
