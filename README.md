@@ -2,6 +2,7 @@
 
 Support 是通过Golang 1.18+版本以上,提供的开箱即用的功能工具助手.    
 
+
 Support is a Programming helpers powered by Golang [1.18](https://tip.golang.org/doc/go1.18)+ [generics](https://tip.golang.org/doc/go1.18#generics).
 
 ## Contents
@@ -220,3 +221,5 @@ support.MReduceF(func(carry string, key string, item string) string { return car
 
 // => a1b2c3
 ```
+
+ADD TEST
